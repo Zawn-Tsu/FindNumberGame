@@ -4,24 +4,47 @@ body {
   background: #f7f7f7;
 }
 
+h1 {
+  margin-top: 20px;
+}
+
 #board {
-  width: 800px;
+  width: 600px;
   height: 600px;
   margin: 20px auto;
   border: 2px solid #333;
   position: relative;
+  background: #fff;
 }
 
-.number {
+.cell {
   position: absolute;
-  padding: 5px 8px;
-  background: #3498db;
-  color: white;
-  border-radius: 5px;
+  width: 35px;
+  height: 35px;
+  line-height: 35px;
+  border-radius: 50%; /* ô tròn */
+  text-align: center;
   cursor: pointer;
-  font-size: 14px;
+  font-weight: bold;
+  color: white;
+  border: none;
 }
-.number.found {
-  background: gray;
-  pointer-events: none;
+
+.cell.unclaimed {
+  background: #3498db;
+}
+
+.cell.claimedMe {
+  background: green;
+}
+
+.cell.claimedOther {
+  background: red;
+}
+
+#resetBtn {
+  margin-top: 10px;
+  padding: 8px 15px;
+  font-size: 16px;
+  cursor: pointer;
 }

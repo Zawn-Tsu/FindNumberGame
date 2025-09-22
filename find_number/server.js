@@ -2,59 +2,122 @@ const express = require("express");
 const app = express();
 const http = require("http").createServer(app);
 const io = require("socket.io")(http);
+const path = require("path");
 
-app.use(express.static(__dirname + "/public"));
+app.use(express.static(path.join(__dirname, "public")));
 
-let currentNumber = 1;
-let scores = {};
-let board = generateBoard(); // bàn cờ random
+// Quản lý nhiều phòng
+let rooms = {}; 
+// rooms[roomId] = { board, currentNumber, scores, players }
 
-// tạo bàn cờ random 100 số
 function generateBoard() {
   let positions = [];
-  let numbers = [...Array(100).keys()].map(x => x + 1); // 1..100
-
-  // giới hạn toạ độ trong vùng (giả sử 600x600 px)
+  let numbers = [...Array(100).keys()].map(x => x + 1);
   let used = [];
   numbers.forEach(num => {
     let x, y;
     do {
-      x = Math.floor(Math.random() * 550); // tránh tràn khung
+      x = Math.floor(Math.random() * 550);
       y = Math.floor(Math.random() * 550);
-    } while (used.some(p => Math.abs(p.x - x) < 40 && Math.abs(p.y - y) < 40)); 
-    // tránh trùng lặp hoặc chồng lên nhau
+    } while (used.some(p => Math.abs(p.x - x) < 40 && Math.abs(p.y - y) < 40));
 
-    used.push({x, y});
-    positions.push({num, x, y});
+    used.push({ x, y });
+    positions.push({ num, x, y, claimedBy: null }); // thêm claimedBy
   });
-
   return positions;
 }
 
 io.on("connection", (socket) => {
   console.log("Người chơi mới:", socket.id);
-  scores[socket.id] = 0;
 
-  // gửi bàn cờ + trạng thái hiện tại
-  socket.emit("init", { currentNumber, scores, board });
+  // Người chơi join phòng
+  socket.on("joinRoom", (roomId) => {
+    if (!rooms[roomId]) {
+      // tạo phòng mới
+      rooms[roomId] = {
+        board: generateBoard(),
+        currentNumber: 1,
+        scores: {},
+        players: []
+      };
+    }
 
-  socket.on("checkNumber", (num) => {
-    if (num === currentNumber) {
-      scores[socket.id]++;
-      currentNumber++;
-      if (currentNumber > 100) {
-        io.emit("gameOver", scores);
+    let room = rooms[roomId];
+    if (room.players.length >= 2) {
+      socket.emit("roomFull");
+      return;
+    }
+
+    socket.join(roomId);
+    room.players.push(socket.id);
+    room.scores[socket.id] = 0;
+
+    // gửi state cho người mới
+    socket.emit("init", {
+      board: room.board,
+      currentNumber: room.currentNumber,
+      scores: room.scores,
+      players: room.players
+    });
+
+    // cập nhật cho cả phòng
+    io.to(roomId).emit("updateScores", room.scores);
+  });
+
+  // Khi click số
+  socket.on("checkNumber", ({ roomId, num }) => {
+    let room = rooms[roomId];
+    if (!room) return;
+
+    if (num === room.currentNumber) {
+      room.scores[socket.id]++;
+      room.board.find(p => p.num === num).claimedBy = socket.id;
+      room.currentNumber++;
+
+      if (room.currentNumber > 100) {
+        io.to(roomId).emit("gameOver", room.scores);
       } else {
-        io.emit("updateNumber", currentNumber);
-        io.emit("updateScores", scores);
+        io.to(roomId).emit("updateBoard", room.board);
+        io.to(roomId).emit("updateNumber", room.currentNumber);
+        io.to(roomId).emit("updateScores", room.scores);
       }
     }
   });
 
+  // Reset trận
+  socket.on("resetGame", (roomId) => {
+    let room = rooms[roomId];
+    if (!room) return;
+
+    room.board = generateBoard();
+    room.currentNumber = 1;
+    for (let id of room.players) {
+      room.scores[id] = 0;
+    }
+
+    io.to(roomId).emit("init", {
+      board: room.board,
+      currentNumber: room.currentNumber,
+      scores: room.scores,
+      players: room.players
+    });
+  });
+
+  // Ngắt kết nối
   socket.on("disconnect", () => {
-    console.log("Rời:", socket.id);
-    delete scores[socket.id];
-    io.emit("updateScores", scores);
+    for (let roomId in rooms) {
+      let room = rooms[roomId];
+      if (room.players.includes(socket.id)) {
+        room.players = room.players.filter(p => p !== socket.id);
+        delete room.scores[socket.id];
+        io.to(roomId).emit("updateScores", room.scores);
+
+        // Nếu phòng trống → xóa
+        if (room.players.length === 0) {
+          delete rooms[roomId];
+        }
+      }
+    }
   });
 });
 

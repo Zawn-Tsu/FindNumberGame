@@ -1,14 +1,24 @@
 {
-  "name": "find_number",
+  "name": "find-number-game",
   "version": "1.0.0",
-  "description": "",
-  "main": "index.js",
+  "description": "Game tìm số 1vs1 multiplayer online",
+  "main": "src/server.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "start": "node src/server.js",
+    "dev": "node src/server.js"
   },
-  "keywords": [],
-  "author": "",
+  "keywords": [
+    "game",
+    "multiplayer",
+    "socket.io",
+    "express",
+    "nodejs"
+  ],
+  "author": "Zawn-Tsu",
   "license": "ISC",
+  "engines": {
+    "node": "18.x"
+  },
   "dependencies": {
     "express": "^5.1.0",
     "socket.io": "^4.8.1"

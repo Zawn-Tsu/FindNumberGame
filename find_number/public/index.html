@@ -2,19 +2,62 @@
 <html lang="vi">
 <head>
   <meta charset="UTF-8">
-  <title>🎮 Game Tìm Số 1vs1</title>
-  <link rel="stylesheet" href="style.css">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Game Tìm Số</title>
+  <link rel="stylesheet" href="css/style.css">
 </head>
 <body>
-  <h1>🎮 Game Tìm Số 1vs1</h1>
+  <!-- Login Modal -->
+  <div id="loginModal" class="modal active">
+    <div class="modal-content">
+      <h2>Game Tìm Số</h2>
+      <form id="loginForm">
+        <div class="form-group">
+          <label for="playerName">Tên của bạn</label>
+          <input type="text" id="playerName" placeholder="Nhập tên" required maxlength="20">
+        </div>
+        <div class="form-group">
+          <label for="roomCode">Mã phòng</label>
+          <input type="text" id="roomCode" placeholder="Nhập mã phòng hoặc để trống để tạo mới" maxlength="10">
+        </div>
+        <button type="submit" class="btn-primary">Vào chơi</button>
+      </form>
+    </div>
+  </div>
 
-  <div id="currentDisplay"></div>
-  <div id="scores"></div>
-  <div id="board"></div>
+  <div class="container" id="gameContainer" style="display: none;">
+    <div class="room-info">
+      <span>Phòng: <strong id="roomCodeDisplay">-</strong></span>
+    </div>
 
-  <button id="resetBtn">🔄 Reset Trận</button>
+    <div class="header">
+      <div class="player-card player-left">
+        <div class="player-name" id="playerLeftName">-</div>
+        <div class="player-score" id="playerLeftScore">0</div>
+      </div>
+
+      <div class="info-card current-number">
+        <div class="label">Số tiếp</div>
+        <div class="value" id="currentNumber">1</div>
+      </div>
+
+      <div class="player-card player-right">
+        <div class="player-name" id="playerRightName">-</div>
+        <div class="player-score" id="playerRightScore">0</div>
+      </div>
+    </div>
+
+    <div class="game-board-container">
+      <div id="board" class="board"></div>
+    </div>
+
+    <div class="footer">
+      <button id="resetBtn" class="btn-rest">↻ Chơi lại</button>
+      <button id="exitBtn" class="btn-exit">← Thoát</button>
+    </div>
+  </div>
 
   <script src="/socket.io/socket.io.js"></script>
-  <script src="script.js"></script>
+  <script src="js/script.js"></script>
 </body>
 </html>

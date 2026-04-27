@@ -17,6 +17,12 @@ let playerName = null;
 let mySocketId = null;
 let allPlayers = {}; // {socketId: {name, score}}
 
+// Get the scale factor for responsive board
+function getBoardScale() {
+  const boardSize = boardDiv.offsetWidth || boardDiv.clientWidth || 750;
+  return boardSize / 750;
+}
+
 // Login form submit
 loginForm.addEventListener("submit", (e) => {
   e.preventDefault();
@@ -123,13 +129,20 @@ function updatePlayerDisplay(scores = {}, playersList = null) {
 
 function renderBoard(board) {
   boardDiv.innerHTML = "";
-  console.log(`🎮 Rendering board với ${board.length} số`);
+  const scale = getBoardScale();
+  
+  console.log(`🎮 Rendering board với ${board.length} số, scale: ${scale.toFixed(2)}`);
   
   board.forEach((cell) => {
     let el = document.createElement("button");
     el.classList.add("cell");
-    el.style.left = cell.x + "px";
-    el.style.top = cell.y + "px";
+    
+    // Apply scale factor to cell positions
+    el.style.left = (cell.x * scale) + "px";
+    el.style.top = (cell.y * scale) + "px";
+    el.style.width = (50 * scale) + "px";
+    el.style.height = (50 * scale) + "px";
+    el.style.fontSize = (14 * scale) + "px";
     el.innerText = cell.num;
 
     if (!cell.claimedBy) {
@@ -150,3 +163,11 @@ function renderBoard(board) {
     boardDiv.appendChild(el);
   });
 }
+
+// Recalculate board when window is resized
+window.addEventListener("resize", () => {
+  // Re-render board with new scale if game is active
+  if (gameContainer.style.display !== "none") {
+    socket.emit("getBoard", roomId);
+  }
+});

@@ -8,7 +8,7 @@ body {
   font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
   background: linear-gradient(135deg, #ffeef8 0%, #fff9e6 100%);
   min-height: 100vh;
-  padding: 20px;
+  padding: 15px;
 }
 
 .container {
@@ -17,7 +17,8 @@ body {
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 20px;
+  gap: 15px;
+  width: 100%;
 }
 
 /* ===== HEADER / INFO CARDS ===== */
@@ -25,38 +26,40 @@ body {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  gap: 30px;
+  gap: 15px;
   width: 100%;
-  margin-bottom: 10px;
+  margin-bottom: 5px;
+  flex-wrap: wrap;
 }
 
 .info-card {
   background: rgba(255, 255, 255, 0.7);
   border-radius: 15px;
-  padding: 15px 25px;
+  padding: 12px 15px;
   box-shadow: 0 2px 8px rgba(255, 182, 193, 0.1);
   flex: 1;
   text-align: center;
   border: 1px solid rgba(255, 182, 193, 0.2);
+  min-width: 80px;
 }
 
 .info-card .label {
-  font-size: 11px;
+  font-size: 10px;
   font-weight: 600;
   letter-spacing: 0.5px;
   color: #999;
-  margin-bottom: 5px;
+  margin-bottom: 3px;
 }
 
 .info-card .label-small {
-  font-size: 9px;
+  font-size: 8px;
   font-weight: 500;
   color: #bbb;
   margin-top: 3px;
 }
 
 .info-card .value {
-  font-size: 28px;
+  font-size: 22px;
   font-weight: 700;
   color: #333;
 }
@@ -71,7 +74,7 @@ body {
 
 .current-number .value {
   color: #ff8fab;
-  font-size: 38px;
+  font-size: 32px;
 }
 
 .target-score .value {
@@ -84,11 +87,13 @@ body {
   display: flex;
   justify-content: center;
   padding: 10px 0;
+  max-width: 100%;
 }
 
 .board {
-  width: 750px;
-  height: 750px;
+  width: 100%;
+  max-width: 750px;
+  aspect-ratio: 1;
   background: linear-gradient(135deg, #fff5f9 0%, #fffef2 100%);
   border-radius: 25px;
   position: relative;
@@ -115,6 +120,7 @@ body {
   box-shadow: 0 3px 10px rgba(0, 0, 0, 0.1);
   z-index: 1;
   background: linear-gradient(135deg, #7ec8e3 0%, #66b8d4 100%);
+  touch-action: manipulation;
 }
 
 .cell:hover:not(.claimedMe):not(.claimedOther) {
@@ -154,9 +160,10 @@ body {
 .footer {
   display: flex;
   align-items: center;
-  gap: 15px;
   justify-content: center;
+  gap: 15px;
   margin-top: 20px;
+  width: 100%;
   flex-wrap: wrap;
 }
 
@@ -343,21 +350,108 @@ body {
 }
 
 /* ===== RESPONSIVE ===== */
+@media (max-width: 900px) {
+  .board {
+    width: calc(100vw - 30px);
+  }
+}
+
 @media (max-width: 768px) {
   body {
-    padding: 5px;
+    padding: 10px;
   }
 
   .container {
-    gap: 5px;
+    gap: 10px;
+    width: 100%;
   }
 
   .header {
-    gap: 5px;
+    gap: 10px;
+    width: 100%;
   }
 
   .info-card {
     padding: 10px 12px;
+    font-size: 14px;
+  }
+
+  .info-card .value {
+    font-size: 20px;
+  }
+
+  .current-number .value {
+    font-size: 28px;
+  }
+
+  .info-card .label {
+    font-size: 10px;
+  }
+
+  .board {
+    width: 100%;
+    max-width: 100%;
+    border-radius: 15px;
+  }
+
+  .cell {
+    width: 40px;
+    height: 40px;
+    font-size: 12px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  }
+
+  .player-card {
+    padding: 12px 8px;
+    min-width: 70px;
+    flex: 1;
+    min-width: auto;
+  }
+
+  .player-name {
+    font-size: 12px;
+  }
+
+  .player-score {
+    font-size: 24px;
+  }
+
+  .footer {
+    width: 100%;
+    justify-content: center;
+    gap: 12px;
+    margin-top: 15px;
+  }
+
+  .btn-rest, .btn-exit {
+    padding: 10px 20px;
+    font-size: 13px;
+    min-width: auto;
+  }
+
+  .room-info {
+    font-size: 12px;
+  }
+}
+
+@media (max-width: 600px) {
+  body {
+    padding: 8px;
+  }
+
+  .container {
+    gap: 8px;
+    width: 100%;
+  }
+
+  .header {
+    gap: 8px;
+    width: 100%;
+  }
+
+  .info-card {
+    padding: 10px 10px;
+    min-width: 60px;
   }
 
   .info-card .value {
@@ -368,16 +462,22 @@ body {
     font-size: 24px;
   }
 
-  .info-card .label {
-    font-size: 10px;
+  .player-card {
+    padding: 10px 6px;
+    min-width: 60px;
+  }
+
+  .player-name {
+    font-size: 11px;
+    margin-bottom: 5px;
+  }
+
+  .player-score {
+    font-size: 20px;
   }
 
   .board {
-    width: min(90vw, 100vw - 10px);
-    height: min(90vw, 100vw - 10px);
-    max-width: 100%;
-    max-height: calc(100vh - 200px);
-    border-radius: 15px;
+    border-radius: 12px;
   }
 
   .cell {
@@ -386,61 +486,172 @@ body {
     font-size: 11px;
   }
 
-  .player-card {
-    padding: 10px;
-    min-width: 80px;
-  }
-
-  .player-name {
-    font-size: 11px;
-  }
-
-  .player-score {
-    font-size: 20px;
+  .footer {
+    width: 100%;
+    justify-content: center;
+    gap: 10px;
+    margin-top: 12px;
   }
 
   .btn-rest, .btn-exit {
-    padding: 10px 18px;
+    padding: 9px 16px;
     font-size: 12px;
-    min-width: 80px;
-  }
-
-  .room-info {
-    font-size: 12px;
+    border-radius: 16px;
   }
 }
 
 @media (max-width: 480px) {
   body {
-    padding: 3px;
+    padding: 6px;
   }
 
   .container {
-    gap: 3px;
+    gap: 6px;
+    width: 100%;
   }
 
   .header {
-    gap: 3px;
+    gap: 6px;
+    width: 100%;
+  }
+
+  .room-info {
+    font-size: 11px;
+    margin: 5px 0 10px 0;
+    width: 100%;
+  }
+
+  .game-board-container {
+    padding: 5px 0;
+    width: 100%;
   }
 
   .board {
-    width: calc(100vw - 6px);
-    height: calc(100vw - 6px);
+    border-radius: 12px;
+    max-width: 100%;
   }
 
   .cell {
-    width: 30px;
-    height: 30px;
+    width: 32px;
+    height: 32px;
     font-size: 10px;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+  }
+
+  .info-card {
+    padding: 8px 10px;
+    min-width: 55px;
+    border-radius: 12px;
+  }
+
+  .info-card .label {
+    font-size: 9px;
+    margin-bottom: 2px;
+  }
+
+  .info-card .value {
+    font-size: 16px;
+  }
+
+  .current-number .value {
+    font-size: 22px;
+  }
+
+  .player-card {
+    padding: 8px 5px;
+    min-width: 50px;
+    border-radius: 12px;
+  }
+
+  .player-name {
+    font-size: 10px;
+    margin-bottom: 4px;
   }
 
   .player-score {
     font-size: 18px;
   }
 
-  .player-name {
-    font-size: 10px;
+  .player-left {
+    border-left: 3px solid #ff8fab;
   }
+
+  .player-right {
+    border-right: 3px solid #7ec8e3;
+  }
+
+  .footer {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    margin-top: 10px;
+    flex-wrap: wrap;
+  }
+
+  .btn-rest, .btn-exit {
+    padding: 8px 14px;
+    font-size: 11px;
+    border-radius: 16px;
+    min-width: 0;
+    flex: 1;
+    min-width: 80px;
+    max-width: none;
+  }
+}
+
+@media (max-width: 375px) {
+  body {
+    padding: 5px;
+  }
+
+  .container {
+    gap: 5px;
+    width: 100%;
+  }
+
+  .cell {
+    width: 28px;
+    height: 28px;
+    font-size: 9px;
+  }
+
+  .info-card {
+    padding: 7px 8px;
+    min-width: 50px;
+  }
+
+  .info-card .value {
+    font-size: 15px;
+  }
+
+  .current-number .value {
+    font-size: 20px;
+  }
+
+  .player-score {
+    font-size: 16px;
+  }
+
+  .footer {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    margin-top: 8px;
+    flex-wrap: wrap;
+  }
+
+  .btn-rest, .btn-exit {
+    padding: 7px 12px;
+    font-size: 10px;
+    min-width: 0;
+    flex: 1;
+    min-width: 70px;
+  }
+}
 
   .info-card .value {
     font-size: 16px;

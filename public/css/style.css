@@ -2,13 +2,26 @@
   margin: 0;
   padding: 0;
   box-sizing: border-box;
+  -webkit-tap-highlight-color: transparent;
+}
+
+html {
+  width: 100%;
+  height: 100%;
+  -webkit-user-select: none;
+  user-select: none;
 }
 
 body {
   font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
   background: linear-gradient(135deg, #ffeef8 0%, #fff9e6 100%);
   min-height: 100vh;
+  min-height: 100dvh;
   padding: 15px;
+  width: 100%;
+  overflow-x: hidden;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
 }
 
 .container {
@@ -17,8 +30,10 @@ body {
   display: flex;
   flex-direction: column;
   align-items: center;
+  justify-content: center;
   gap: 15px;
   width: 100%;
+  height: auto;
 }
 
 /* ===== HEADER / INFO CARDS ===== */
@@ -81,11 +96,19 @@ body {
   color: #7ec8e3;
 }
 
+/* Mobile-first adjustments */
+@supports (aspect-ratio: 1) {
+  .board {
+    aspect-ratio: 1;
+  }
+}
+
 /* ===== GAME BOARD ===== */
 .game-board-container {
   width: 100%;
   display: flex;
   justify-content: center;
+  align-items: center;
   padding: 10px 0;
   max-width: 100%;
 }
@@ -93,13 +116,15 @@ body {
 .board {
   width: 100%;
   max-width: 750px;
-  aspect-ratio: 1;
+  aspect-ratio: 1 / 1;
   background: linear-gradient(135deg, #fff5f9 0%, #fffef2 100%);
   border-radius: 25px;
   position: relative;
   box-shadow: 0 10px 40px rgba(255, 182, 193, 0.2);
   overflow: hidden;
   border: 2px solid rgba(255, 182, 193, 0.1);
+  -webkit-user-select: none;
+  user-select: none;
 }
 
 /* ===== NUMBER CELLS ===== */
@@ -121,6 +146,9 @@ body {
   z-index: 1;
   background: linear-gradient(135deg, #7ec8e3 0%, #66b8d4 100%);
   touch-action: manipulation;
+  -webkit-user-select: none;
+  user-select: none;
+  outline: none;
 }
 
 .cell:hover:not(.claimedMe):not(.claimedOther) {
